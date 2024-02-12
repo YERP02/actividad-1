@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json())
 const port = 3010
 
 const helados = [
@@ -8,21 +9,38 @@ const helados = [
     {id:3, nombre: "Cafe"}
 ]
 
-app.get('/', (req, res) => {
+app.get('/helados', (req, res) => {
   res.send(helados)
 })
 
-app.post('/test', (req, res) => {
-    const {id, name} = req.query;
-    helados.push({id, name});
-    res.status(200).send({id,name});
+app.post('/helados', (req, res) => {
+    const {id, nombre} = req.body;
+    helados.push({id, nombre});
+    res.status(200).send({id,nombre});
 })
 
-/*app.get('/', (req, res) => {
-    const {id_n, name_n} = req.query;
-    const modificar = helados.find(id_n = helados.id);
+
+app.get('/helados/:id', (req, res) => {
+    const {id} = req.params;
+    const {nombre} = req.body;
+    const heladoEncontrado = helados.find((h) => h.id == id);
+    res.send(heladoEncontrado);
 })
-*/
+
+app.patch('/helados/:id', (req, res) => {
+    const {id} = req.params;
+    const heladoEncontrado =helados.find((bus) => bus.id ==id );
+    const {nombre} = req.body;
+    heladoEncontrado = nombre
+    //const {nombre} = req.body;
+    res.send(heladoEncontrado);
+})
+
+app.delete('/helados/:id', (req, res) => {
+    const {id} = req.params;
+    const heladoEncontrado =helados.pop((del) => del.id == id);
+    res.send(heladoEncontrado);
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
