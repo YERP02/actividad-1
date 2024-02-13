@@ -28,19 +28,30 @@ app.get('/helados/:id', (req, res) => {
 })
 
 app.patch('/helados/:id', (req, res) => {
-    const {id} = req.params;
-    const heladoEncontrado =helados.find((bus) => bus.id ==id );
-    const {nombre} = req.body;
-    heladoEncontrado = nombre
-    //const {nombre} = req.body;
-    res.send(heladoEncontrado);
-})
+    const { id } = req.params;
+    let heladoEncontrado = helados.find((bus) => bus.id == id);
+
+    if (heladoEncontrado) {
+        const { nombre} = req.body;
+        if (nombre) {
+            heladoEncontrado.nombre = nombre;
+        }
+        res.send(heladoEncontrado);
+    }
+
+});
 
 app.delete('/helados/:id', (req, res) => {
-    const {id} = req.params;
-    const heladoEncontrado =helados.pop((del) => del.id == id);
-    res.send(heladoEncontrado);
-})
+    const { id } = req.params;
+    const heladoIndex = helados.findIndex((del) => del.id == id);
+
+    if (heladoIndex !== -1) {
+        const heladoEliminado = helados.splice(heladoIndex, 1);
+        res.send(heladoEliminado);
+    } else {
+        res.status(200).send("Helado no encontrado");
+    }
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
